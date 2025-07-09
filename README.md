@@ -99,16 +99,33 @@ pnpm start
 
 ## 📚 Scripts Disponíveis
 
-- `pnpm run dev` - Executa o servidor em modo de desenvolvimento com hot reload
 - `pnpm start` - Executa o servidor em modo de produção
+- `pnpm run dev` - Executa o servidor em modo de desenvolvimento com hot reload
 - `pnpm run db:seed` - Popula o banco de dados com dados de exemplo
+- `pnpm run db:generate` - Gera os arquivos de migração do banco de dados baseado no schema
+- `pnpm run db:migrate` - Executa as migrações pendentes do banco de dados
+- `pnpm run lint` - Executa a verificação de código com o Ultracite
+- `pnpm run format` - Formata o código com o Ultracite
 
 ## 🌐 Endpoints
 
 A API estará disponível em `http://localhost:3333`
 
-- `GET /health` - Health check da aplicação
-- `GET /rooms` - Lista as salas disponíveis
+### Health Check
+
+- `GET /health` - Verifica o status da aplicação
+
+### Salas
+
+- `GET /rooms` - Lista todas as salas disponíveis
+- `POST /rooms` - Cria uma nova sala
+  - Body: `{ "name": string, "description": string? }`
+
+### Perguntas
+
+- `GET /rooms/:roomId/questions` - Lista todas as perguntas de uma sala
+- `POST /rooms/:roomId/questions` - Cria uma nova pergunta em uma sala
+  - Body: `{ "question": string }`
 
 ---
 
