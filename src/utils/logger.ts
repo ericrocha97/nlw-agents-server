@@ -5,15 +5,16 @@ type LogType = 'info' | 'warn' | 'error' | 'debug';
 interface LogOptions {
   type: LogType;
   message: string;
+  details?: string;
 }
 
 /**
  * Loga uma mensagem estruturada no console.
  * @param options - Opções de log
  */
-export const log = ({ type, message }: LogOptions): void => {
+export const log = ({ type, message, details }: LogOptions): void => {
   const timestamp = new Date().toISOString();
-  const logMsg = `[${timestamp}] [${type.toUpperCase()}] ${message}`;
+  const logMsg = `[${timestamp}] [${type.toUpperCase()}] ${message} ${details ? `- ${details}` : ''}`;
   switch (type) {
     case 'info':
       //biome-ignore lint/suspicious/noConsole: permitido para logs

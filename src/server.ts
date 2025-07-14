@@ -6,12 +6,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
-import { createQuestionRoute } from './http/routes/create-question.ts';
-import { createRoomRoute } from './http/routes/create-room.ts';
-import { getRoomQuestions } from './http/routes/get-room-questions.ts';
-import { getRoomsRoute } from './http/routes/get-rooms.ts';
-import { healthRoute } from './http/routes/health.ts';
-import { uploadAudioRoute } from './http/routes/upload-audio.ts';
+import { appRoutes } from './http/routes/index.ts';
 import { env, log } from './utils/index.ts';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
@@ -25,14 +20,30 @@ app.register(fastifyMultipart);
 app.setSerializerCompiler(serializerCompiler);
 app.setValidatorCompiler(validatorCompiler);
 
-app.register(healthRoute);
+app.register(appRoutes);
 
-app.register(getRoomsRoute);
-app.register(createRoomRoute);
-app.register(getRoomQuestions);
-app.register(createQuestionRoute);
+app.setErrorHandler((error, _request, reply) => {
+  if (error instanceof Error) {
+    log({
+      type: 'error',
+      message: `Error: ${error.message}`,
+      details: error.stack,
+    });
+    return reply.status(500).send({
+      error: 'Internal Server Error',
+      message: error.message,
+    });
+  }
 
-app.register(uploadAudioRoute);
+  log({
+    type: 'error',
+    message: `Unknown error: ${error}`,
+  });
+  return reply.status(500).send({
+    error: 'Internal Server Error',
+    message: 'An unexpected error occurred.',
+  });
+});
 
 app.listen({ port: env.PORT }).then(() => {
   log({

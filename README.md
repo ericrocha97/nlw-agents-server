@@ -1,42 +1,43 @@
-
 # NLW Agents
 
-Versão: 1.0.0  
-Nome do projeto: Nlw Agents Server
+Versão: 1.0.0
+Nome do Projeto: NLW Agents Server
 
-Projeto desenvolvido durante um evento da **Rocketseat** utilizando tecnologias modernas para criação de uma API robusta e eficiente.
+Projeto desenvolvido durante um evento da **Rocketseat** utilizando tecnologias modernas para criar uma API robusta e eficiente.
 
 ## 🚀 Tecnologias
 
-- **Node.js** com TypeScript nativo (experimental strip types)
-- **Fastify** - Framework web rápido e eficiente
-- **PostgreSQL** com extensão **pgvector** para vetores
-- **Drizzle ORM** - Type-safe database operations
-- **Zod** - Schema validation
-- **Docker** - Containerização do banco de dados
-- **Biome** - Linting e formatação de código
+* **Node.js** com TypeScript nativo (experimental strip types)
+* **Fastify** - Framework web rápido e eficiente
+* **PostgreSQL** com extensão **pgvector** para vetores
+* **Drizzle ORM** - Operações type-safe com banco de dados
+* **Zod** - Validação de schemas
+* **Docker** - Containerização do banco de dados
+* **Biome** - Linting e formatação de código
 
 ## 🏗️ Arquitetura
 
 O projeto segue uma arquitetura modular com:
 
-- **Separação de responsabilidades** entre rotas, schemas e conexão com banco
-- **Validação de schemas** com Zod para type safety
-- **ORM type-safe** com Drizzle para operações de banco de dados
-- **Validação de variáveis de ambiente** centralizadas
+* **Separação de responsabilidades** entre rotas, schemas e conexão com banco
+* **Tratamento de erros centralizado** para respostas consistentes
+* **Organização modular de rotas** para melhor manutenção
+* **Validação de schemas** com Zod para type safety
+* **ORM type-safe** com Drizzle para operações de banco de dados
+* **Validação de variáveis de ambiente** centralizada
 
-## ⚙️ Setup e Configuração
+## ⚙️ Configuração e Setup
 
-### Pré-requisitos
+### Requisitos
 
-- Node.js (versão com suporte a `--experimental-strip-types`)
-- Docker e Docker Compose
+* Node.js (versão com suporte a `--experimental-strip-types`)
+* Docker e Docker Compose
 
 ### 1. Clone o repositório
 
 ```bash
-git clone <url-do-repositorio>
-cd server
+git clone https://github.com/ericrocha97/nlw-agents-server.git
+cd nlw-agents-server
 ```
 
 ### 2. Configure o banco de dados
@@ -57,13 +58,13 @@ Depois, ajuste os valores conforme necessário no arquivo `.env` na raiz do proj
 
 ### 4. Instale as dependências
 
-> **Importante:** Certifique-se de estar usando a versão correta do Node.js. Se você utiliza o [nvm](https://github.com/nvm-sh/nvm), execute:
+> **Importante:** Verifique se você está utilizando a versão correta do Node.js. Se você usa [nvm](https://github.com/nvm-sh/nvm), execute:
 
 ```bash
 nvm use
 ```
 
-Recomendado: utilize o [pnpm](https://pnpm.io/) para instalar as dependências, pois o projeto foi configurado para funcionar melhor com ele.
+Recomendação: utilize [pnpm](https://pnpm.io/) para instalar as dependências, pois o projeto foi configurado para funcionar melhor com ele.
 
 ```bash
 pnpm install
@@ -71,19 +72,19 @@ pnpm install
 
 Se preferir, você pode usar `npm install`, mas o suporte principal é para pnpm.
 
-### 5. Execute as migrações do banco
+### 5. Rode as migrações do banco de dados
 
 ```bash
-pnpm drizzle-kit migrate
+pnpm run db:migrate
 ```
 
-### 6. (Opcional) Popule o banco com dados de exemplo
+### 6. (Opcional) Popule o banco de dados com dados de exemplo
 
 ```bash
 pnpm run db:seed
 ```
 
-### 7. Execute o projeto
+### 7. Rode o projeto
 
 **Desenvolvimento:**
 
@@ -99,13 +100,13 @@ pnpm start
 
 ## 📚 Scripts Disponíveis
 
-- `pnpm start` - Executa o servidor em modo de produção
-- `pnpm run dev` - Executa o servidor em modo de desenvolvimento com hot reload
-- `pnpm run db:seed` - Popula o banco de dados com dados de exemplo
-- `pnpm run db:generate` - Gera os arquivos de migração do banco de dados baseado no schema
-- `pnpm run db:migrate` - Executa as migrações pendentes do banco de dados
-- `pnpm run lint` - Executa a verificação de código com o Ultracite
-- `pnpm run format` - Formata o código com o Ultracite
+* `pnpm start` - Executa o servidor em modo produção
+* `pnpm run dev` - Executa o servidor em modo desenvolvimento com hot reload
+* `pnpm run db:seed` - Popula o banco de dados com dados de exemplo
+* `pnpm run db:generate` - Gera arquivos de migração a partir do schema
+* `pnpm run db:migrate` - Executa migrações pendentes do banco de dados
+* `pnpm run lint` - Roda a verificação de código com Ultracite
+* `pnpm run format` - Formata o código com Ultracite
 
 ## 🌐 Endpoints
 
@@ -113,19 +114,35 @@ A API estará disponível em `http://localhost:3333`
 
 ### Health Check
 
-- `GET /health` - Verifica o status da aplicação
+* `GET /health` - Verifica o status da aplicação
 
-### Salas
+### Rooms (Salas)
 
-- `GET /rooms` - Lista todas as salas disponíveis
-- `POST /rooms` - Cria uma nova sala
-  - Body: `{ "name": string, "description": string? }`
+* `GET /rooms` - Lista todas as salas disponíveis
+* `POST /rooms` - Cria uma nova sala
 
-### Perguntas
+  * Body: `createRoomBodySchema` (definido em `src/http/schemas/room-schemas.ts`)
 
-- `GET /rooms/:roomId/questions` - Lista todas as perguntas de uma sala
-- `POST /rooms/:roomId/questions` - Cria uma nova pergunta em uma sala
-  - Body: `{ "question": string }`
+    * Exemplo: `{ "name": "Minha Nova Sala", "description": "Uma sala para discussões" }`
+
+### Questions (Perguntas)
+
+* `GET /rooms/:roomId/questions` - Lista todas as perguntas de uma sala
+
+  * Params: `roomIdParamsSchema` (definido em `src/http/schemas/common-schemas.ts`)
+* `POST /rooms/:roomId/questions` - Cria uma nova pergunta em uma sala
+
+  * Params: `roomIdParamsSchema` (definido em `src/http/schemas/common-schemas.ts`)
+  * Body: `createQuestionBodySchema` (definido em `src/http/schemas/question-schemas.ts`)
+
+    * Exemplo: `{ "question": "Qual o sentido da vida?" }`
+
+### Upload de Áudio
+
+* `POST /rooms/:roomId/audio` - Faz upload de um arquivo de áudio para uma sala
+
+  * Params: `roomIdParamsSchema` (definido em `src/http/schemas/common-schemas.ts`)
+  * Body: `multipart/form-data` contendo o arquivo de áudio.
 
 ---
 

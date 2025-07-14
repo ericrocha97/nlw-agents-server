@@ -25,7 +25,7 @@ await seed(db, schema).refine((f) => {
           maxDate: new Date('2025-07-01'),
           minDate: new Date('2025-01-01'),
         }),
-      }
+      },
     },
   };
 });

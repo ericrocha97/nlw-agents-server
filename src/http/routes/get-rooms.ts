@@ -10,43 +10,29 @@ export const getRoomsRoute: FastifyPluginCallbackZod = (app) => {
       type: 'info',
       message: 'Fetching all rooms',
     });
-    try {
-      const results = await db
-        .select({
-          id: schema.rooms.id,
-          name: schema.rooms.name,
-          createdAt: schema.rooms.createdAt,
-          questionsCount: count(schema.questions.id),
-        })
-        .from(schema.rooms)
-        .leftJoin(
-          schema.questions,
-          eq(schema.questions.roomId, schema.rooms.id)
-        )
-        .groupBy(schema.rooms.id)
-        .orderBy(schema.rooms.createdAt);
+    const results = await db
+      .select({
+        id: schema.rooms.id,
+        name: schema.rooms.name,
+        createdAt: schema.rooms.createdAt,
+        questionsCount: count(schema.questions.id),
+      })
+      .from(schema.rooms)
+      .leftJoin(schema.questions, eq(schema.questions.roomId, schema.rooms.id))
+      .groupBy(schema.rooms.id)
+      .orderBy(schema.rooms.createdAt);
 
-      if (results.length === 0) {
-        log({
-          type: 'warn',
-          message: 'No rooms found.',
-        });
-        return reply.status(404).send({
-          error: 'Not Found',
-          message: 'No rooms found.',
-        });
-      }
-
-      return reply.status(200).send(results);
-    } catch (error) {
+    if (results.length === 0) {
       log({
-        type: 'error',
-        message: `Error fetching rooms: ${error}`,
+        type: 'warn',
+        message: 'No rooms found.',
       });
-      return reply.status(500).send({
-        error: 'Internal Server Error',
-        message: 'An error occurred while fetching rooms.',
+      return reply.status(404).send({
+        error: 'Not Found',
+        message: 'No rooms found.',
       });
     }
+
+    return reply.status(200).send(results);
   });
 };
