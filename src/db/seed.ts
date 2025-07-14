@@ -20,6 +20,12 @@ await seed(db, schema).refine((f) => {
     },
     questions: {
       count: 20,
+      columns: {
+        createdAt: f.date({
+          maxDate: new Date('2025-07-01'),
+          minDate: new Date('2025-01-01'),
+        }),
+      }
     },
   };
 });
