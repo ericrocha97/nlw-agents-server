@@ -1,11 +1,27 @@
 import { reset, seed } from 'drizzle-seed';
 import { log } from '../utils/index.ts';
 import { db, sql } from './connection.ts';
-import { schema } from './schema/index.ts';
+import { questions } from './schema/questions.ts';
+import { rooms } from './schema/rooms.ts';
 
-await reset(db, schema);
+const tablesToSeed = {
+  rooms,
+  questions,
+};
 
-await seed(db, schema).refine((f) => {
+log({
+  type: 'info',
+  message: 'Resetting database...',
+});
+
+await reset(db, tablesToSeed);
+
+log({
+  type: 'info',
+  message: 'Seeding database...',
+});
+
+await seed(db, tablesToSeed).refine((f) => {
   return {
     rooms: {
       count: 5,
