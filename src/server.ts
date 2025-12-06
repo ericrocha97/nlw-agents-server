@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import fastifyCors from '@fastify/cors';
 import fastifyMultipart from '@fastify/multipart';
 import fastify from 'fastify';
@@ -8,8 +9,11 @@ import {
 } from 'fastify-type-provider-zod';
 import { appRoutes } from './http/routes/index.ts';
 import { env, log } from './utils/index.ts';
+import './tsyringe.config.ts';
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
+
+export { app };
 
 app.register(fastifyCors, {
   origin: 'http://localhost:5173',
