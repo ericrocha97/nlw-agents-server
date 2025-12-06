@@ -17,14 +17,40 @@ Projeto desenvolvido durante um evento da **Rocketseat** utilizando tecnologias 
 
 ## 🏗️ Arquitetura
 
-O projeto segue uma arquitetura modular com:
+O projeto foi refatorado para seguir uma arquitetura modular e escalável, com foco na separação de responsabilidades e no desacoplamento de código.
 
-* **Separação de responsabilidades** entre rotas, schemas e conexão com banco
-* **Tratamento de erros centralizado** para respostas consistentes
-* **Organização modular de rotas** para melhor manutenção
-* **Validação de schemas** com Zod para type safety
-* **ORM type-safe** com Drizzle para operações de banco de dados
-* **Validação de variáveis de ambiente** centralizada
+### Estrutura de Diretórios
+
+A nova estrutura de diretórios é organizada por funcionalidades (módulos), o que facilita a manutenção e a adição de novas features.
+
+```
+src/
+├── modules/
+│   ├── rooms/
+│   │   ├── room.routes.ts
+│   │   ├── room.schemas.ts
+│   │   ├── room.service.ts
+│   │   └── room.controller.ts
+│   ├── questions/
+│   │   ├── question.routes.ts
+│   │   ├── question.schemas.ts
+│   │   ├── question.service.ts
+│   │   └── question.controller.ts
+│   └── audio/
+│       ├── audio.routes.ts
+│       ├── audio.schemas.ts
+│       ├── audio.service.ts
+│       └── audio.controller.ts
+├── core/
+│   ├── db/
+│   │   └── connection.ts
+│   └── container.ts
+└── server.ts
+```
+
+### Injeção de Dependência
+
+Para melhorar o desacoplamento e a testabilidade, o projeto agora utiliza injeção de dependência com a biblioteca `tsyringe`. Isso permite que as dependências (como serviços) sejam injetadas nos controllers, facilitando a substituição por mocks em testes e promovendo a reutilização de código.
 
 ## ⚙️ Configuração e Setup
 
